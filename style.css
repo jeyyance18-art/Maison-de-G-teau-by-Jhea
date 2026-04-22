@@ -1,6 +1,6 @@
 body {
     margin:0;
-    font-family: Arial;
+    font-family:Arial;
     background:#fff5f8;
 }
 
@@ -9,8 +9,6 @@ body {
     background:#d63384;
     color:white;
     padding:15px;
-    position:sticky;
-    top:0;
 }
 
 .nav {
@@ -22,27 +20,13 @@ body {
 .hamburger {
     font-size:1.5rem;
     cursor:pointer;
+    display:none;
 }
 
-/* MOBILE MENU */
 #menu {
-    position:fixed;
-    top:60px;
-    right:-100%;
-    background:#d63384;
-    width:200px;
-    height:100vh;
+    display:flex;
+    gap:20px;
     list-style:none;
-    padding:20px;
-    transition:0.3s;
-}
-
-#menu.active {
-    right:0;
-}
-
-#menu li {
-    margin:20px 0;
 }
 
 #menu a {
@@ -53,20 +37,13 @@ body {
 /* HERO */
 .hero {
     text-align:center;
-    padding:60px 20px;
-}
-
-.hero button {
-    padding:12px 25px;
-    background:#d63384;
-    color:white;
-    border:none;
-    border-radius:20px;
+    padding:50px;
 }
 
 /* PRODUCTS */
 .products {
     display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
     gap:20px;
     padding:20px;
 }
@@ -75,7 +52,7 @@ body {
     background:white;
     padding:15px;
     border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    text-align:center;
 }
 
 .product img {
@@ -83,19 +60,19 @@ body {
     border-radius:10px;
 }
 
-.sizes button {
-    display:block;
+.product button {
     width:100%;
     margin:5px 0;
     padding:10px;
     border:none;
-    background:#ff85a2;
+    background:#d63384;
     color:white;
     border-radius:10px;
+    cursor:pointer;
 }
 
-/* FLOATING CART */
-.floating-cart {
+/* CART */
+.cart-icon {
     position:fixed;
     bottom:20px;
     right:20px;
@@ -110,28 +87,55 @@ body {
 .modal {
     display:none;
     position:fixed;
-    background:rgba(0,0,0,0.5);
     width:100%;
     height:100%;
+    background:rgba(0,0,0,0.5);
 }
 
 .modal-content {
     background:white;
-    margin:20% auto;
     padding:20px;
-    width:90%;
+    width:400px;
+    margin:5% auto;
     border-radius:15px;
 }
 
-/* TOAST */
-#toast {
-    position:fixed;
-    bottom:80px;
-    left:50%;
-    transform:translateX(-50%);
-    background:#28a745;
-    color:white;
-    padding:10px 20px;
-    border-radius:20px;
-    display:none;
+/* CART ITEMS */
+.cart-item {
+    display:flex;
+    justify-content:space-between;
+    margin:10px 0;
+}
+
+.qty-btn {
+    padding:5px 10px;
+    margin:0 5px;
+    cursor:pointer;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+    .hamburger {
+        display:block;
+    }
+
+    #menu {
+        position:absolute;
+        top:60px;
+        right:-100%;
+        flex-direction:column;
+        background:#d63384;
+        width:200px;
+        padding:20px;
+        transition:0.3s;
+    }
+
+    #menu.active {
+        right:0;
+    }
+
+    .modal-content {
+        width:90%;
+    }
 }
