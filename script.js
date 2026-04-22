@@ -18,11 +18,8 @@ function addToCart(id,name,price){
     }
 
     saveCart();
-}
 
-function saveCart(){
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartUI();
+    showToast(name + " added to cart ✅");
 }
 
 function updateCartUI(){
