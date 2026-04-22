@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sweets by Jhea</title>
+<title>Maison de G teau</title>
 
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,84 +11,75 @@
 
 <body>
 
-<!-- NAVBAR -->
+<!-- NAV -->
 <header class="header">
     <div class="nav">
-        <div class="logo">🎂 Jhea</div>
+        <h2>🎂 >Maison de G teau</h2>
 
         <div class="hamburger" onclick="toggleMenu()">
-            <i class="fas fa-bars"></i>
+            ☰
         </div>
 
         <ul id="menu">
             <li><a href="#menu-section">Menu</a></li>
-            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#products">Products</a></li>
         </ul>
     </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-    <h1>Fresh Cakes & Brownies 🍰</h1>
-    <p>Delicious. Affordable. Made with love 💗</p>
+    <h1>Cakes & Brownies 🍰</h1>
+    <p>Freshly baked everyday</p>
     <button onclick="scrollToMenu()">Order Now</button>
 </section>
 
-<!-- MENU -->
+<!-- PRODUCTS -->
 <section id="menu-section">
-    <h2>Our Products</h2>
+    <h2>Menu</h2>
 
     <div class="products">
 
-        <!-- CAKE -->
         <div class="product">
             <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400">
-
             <h3>Chocolate Cake</h3>
 
-            <div class="sizes">
-                <button onclick="addToCart('Cake Small',350)">Small ₱350</button>
-                <button onclick="addToCart('Cake Medium',750)">Medium ₱750</button>
-                <button onclick="addToCart('Cake Large',1200)">Large ₱1200</button>
-            </div>
+            <button onclick="addToCart(1,'Cake Small',350)">Small ₱350</button>
+            <button onclick="addToCart(2,'Cake Medium',750)">Medium ₱750</button>
+            <button onclick="addToCart(3,'Cake Large',1200)">Large ₱1200</button>
         </div>
 
-        <!-- BROWNIES -->
         <div class="product">
             <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400">
-
             <h3>Brownies</h3>
 
-            <div class="sizes">
-                <button onclick="addToCart('Brownie 1pc',95)">1pc ₱95</button>
-                <button onclick="addToCart('Box of 6',520)">Box ₱520</button>
-            </div>
+            <button onclick="addToCart(4,'Brownie 1pc',95)">₱95</button>
+            <button onclick="addToCart(5,'Box of 6',520)">Box ₱520</button>
         </div>
 
     </div>
 </section>
 
 <!-- FLOATING CART -->
-<div class="floating-cart" onclick="openCart()">
+<div class="cart-icon" onclick="openCart()">
     🛒 <span id="cartCount">0</span>
 </div>
 
-<!-- CART MODAL -->
+<!-- CART -->
 <div id="cartModal" class="modal">
     <div class="modal-content">
-        <h3>Your Order</h3>
+
+        <span class="close" onclick="closeCart()">×</span>
+
+        <h2>Your Cart</h2>
 
         <div id="cartItems"></div>
 
-        <h2>Total: ₱<span id="total">0</span></h2>
+        <h3>Total: ₱<span id="total">0</span></h3>
 
-        <button onclick="checkout()">Order via SMS</button>
-        <button onclick="closeCart()">Close</button>
+        <button class="checkout" onclick="checkout()">Checkout</button>
     </div>
 </div>
-
-<!-- TOAST -->
-<div id="toast">Added to cart ✅</div>
 
 <script src="script.js"></script>
 </body>
