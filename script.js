@@ -1,137 +1,57 @@
-body {
-    margin:0;
-    font-family: Arial;
-    background:#fff5f8;
+let cart = [];
+
+function toggleMenu(){
+    document.getElementById("menu").classList.toggle("active");
 }
 
-/* NAV */
-.header {
-    background:#d63384;
-    color:white;
-    padding:15px;
-    position:sticky;
-    top:0;
+function scrollToMenu(){
+    document.getElementById("menu-section").scrollIntoView({behavior:"smooth"});
 }
 
-.nav {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+function addToCart(name, price){
+    cart.push({name, price});
+
+    document.getElementById("cartCount").innerText = cart.length;
+
+    showToast();
 }
 
-.hamburger {
-    font-size:1.5rem;
-    cursor:pointer;
+function showToast(){
+    const toast = document.getElementById("toast");
+    toast.style.display="block";
+
+    setTimeout(()=>{
+        toast.style.display="none";
+    },1500);
 }
 
-/* MOBILE MENU */
-#menu {
-    position:fixed;
-    top:60px;
-    right:-100%;
-    background:#d63384;
-    width:200px;
-    height:100vh;
-    list-style:none;
-    padding:20px;
-    transition:0.3s;
+function openCart(){
+    document.getElementById("cartModal").style.display="block";
+    renderCart();
 }
 
-#menu.active {
-    right:0;
+function closeCart(){
+    document.getElementById("cartModal").style.display="none";
 }
 
-#menu li {
-    margin:20px 0;
+function renderCart(){
+    let list = document.getElementById("cartItems");
+    let total = 0;
+
+    list.innerHTML = cart.map(item=>{
+        total += item.price;
+        return `<p>${item.name} - ₱${item.price}</p>`;
+    }).join("");
+
+    document.getElementById("total").innerText = total;
 }
 
-#menu a {
-    color:white;
-    text-decoration:none;
-}
+function checkout(){
+    let msg = "Hi Jhea! Order:\n";
 
-/* HERO */
-.hero {
-    text-align:center;
-    padding:60px 20px;
-}
+    cart.forEach(i=>{
+        msg += `${i.name} - ₱${i.price}\n`;
+    });
 
-.hero button {
-    padding:12px 25px;
-    background:#d63384;
-    color:white;
-    border:none;
-    border-radius:20px;
-}
-
-/* PRODUCTS */
-.products {
-    display:grid;
-    gap:20px;
-    padding:20px;
-}
-
-.product {
-    background:white;
-    padding:15px;
-    border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-
-.product img {
-    width:100%;
-    border-radius:10px;
-}
-
-.sizes button {
-    display:block;
-    width:100%;
-    margin:5px 0;
-    padding:10px;
-    border:none;
-    background:#ff85a2;
-    color:white;
-    border-radius:10px;
-}
-
-/* FLOATING CART */
-.floating-cart {
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    background:#d63384;
-    color:white;
-    padding:15px;
-    border-radius:50px;
-    cursor:pointer;
-}
-
-/* MODAL */
-.modal {
-    display:none;
-    position:fixed;
-    background:rgba(0,0,0,0.5);
-    width:100%;
-    height:100%;
-}
-
-.modal-content {
-    background:white;
-    margin:20% auto;
-    padding:20px;
-    width:90%;
-    border-radius:15px;
-}
-
-/* TOAST */
-#toast {
-    position:fixed;
-    bottom:80px;
-    left:50%;
-    transform:translateX(-50%);
-    background:#28a745;
-    color:white;
-    padding:10px 20px;
-    border-radius:20px;
-    display:none;
+    window.location.href = `sms:09613886728?body=${encodeURIComponent(msg)}`;
 }
