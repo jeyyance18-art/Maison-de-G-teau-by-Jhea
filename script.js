@@ -1,129 +1,108 @@
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-function toggleMenu(){
-    document.getElementById("menu").classList.toggle("active");
-}
+let cart = [];
+let selectedProduct = {};
+let quantity = 1;
 
 function scrollToMenu(){
-    document.getElementById("menu-section").scrollIntoView({behavior:"smooth"});
+    document.getElementById("menu").scrollIntoView({behavior:"smooth"});
 }
 
-function addToCart(id,name,price){
-    let item = cart.find(i=>i.id===id);
+/* PRODUCT POPUP */
+function openProduct(name,price,type){
+    selectedProduct = {name,price,type};
+    quantity = 1;
 
-    if(item){
-        item.qty++;
+    document.getElementById("productName").innerText = name;
+    document.getElementById("qty").innerText = quantity;
+
+    let options = "";
+
+    if(type==="cake"){
+        options = `
+        <button onclick="selectPrice(350)">Small ₱350</button>
+        <button onclick="selectPrice(750)">Medium ₱750</button>
+        <button onclick="selectPrice(1200)">Large ₱1200</button>
+        `;
     } else {
-        cart.push({id,name,price,qty:1});
+        options = `
+        <button onclick="selectPrice(95)">1pc ₱95</button>
+        <button onclick="selectPrice(520)">Box ₱520</button>
+        `;
     }
 
-    saveCart();
+    document.getElementById("productOptions").innerHTML = options;
 
-    showToast(name + " added to cart ✅");
+    document.getElementById("productModal").style.display="block";
 }
 
-function updateCartUI(){
+function closeProduct(){
+    document.getElementById("productModal").style.display="none";
+}
+
+function selectPrice(price){
+    selectedProduct.price = price;
+}
+
+function changeQty(val){
+    quantity += val;
+    if(quantity<1) quantity=1;
+    document.getElementById("qty").innerText = quantity;
+}
+
+/* CART */
+function addToCart(){
+    let item = cart.find(i=>i.name===selectedProduct.name && i.price===selectedProduct.price);
+
+    if(item){
+        item.qty += quantity;
+    } else {
+        cart.push({...selectedProduct, qty:quantity});
+    }
+
+    updateCart();
+    closeProduct();
+}
+
+function updateCart(){
     document.getElementById("cartCount").innerText =
         cart.reduce((a,b)=>a+b.qty,0);
 }
 
+/* OPEN CART */
 function openCart(){
     document.getElementById("cartModal").style.display="block";
-    renderCart();
+
+    let list = document.getElementById("cartItems");
+    let total = 0;
+
+    list.innerHTML = cart.map(i=>{
+        total += i.price * i.qty;
+        return `<p>${i.name} x${i.qty} - ₱${i.price*i.qty}</p>`;
+    }).join("");
+
+    document.getElementById("total").innerText = total;
 }
 
 function closeCart(){
     document.getElementById("cartModal").style.display="none";
 }
 
-function renderCart(){
-    let container = document.getElementById("cartItems");
-    let total = 0;
-
-    if(cart.length===0){
-        container.innerHTML="Cart is empty";
-        document.getElementById("total").innerText=0;
-        return;
-    }
-
-    container.innerHTML = cart.map(item=>{
-        total += item.price * item.qty;
-
-        return `
-        <div class="cart-item">
-            <div>
-                ${item.name}<br>
-                ₱${item.price} x ${item.qty}
-            </div>
-
-            <div>
-                <button class="qty-btn" onclick="changeQty(${item.id},-1)">-</button>
-                <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
-                <button onclick="removeItem(${item.id})">x</button>
-            </div>
-        </div>
-        `;
-    }).join("");
-
-    document.getElementById("total").innerText = total;
+/* CHECKOUT */
+function openCheckout(){
+    document.getElementById("checkoutModal").style.display="block";
 }
 
-function changeQty(id,change){
-    let item = cart.find(i=>i.id===id);
-    item.qty += change;
+/* MESSENGER */
+function sendMessenger(){
+    let name = document.getElementById("name").value;
+    let address = document.getElementById("address").value;
 
-    if(item.qty <= 0){
-        cart = cart.filter(i=>i.id!==id);
-    }
-
-    saveCart();
-    renderCart();
-}
-
-function removeItem(id){
-    cart = cart.filter(i=>i.id!==id);
-    saveCart();
-    renderCart();
-}
-
-function checkout(){
-    if(cart.length===0) return alert("Empty cart!");
-
-    let msg="Hi Jhea! Order:\n\n";
+    let msg = `Hello! Order:\n`;
 
     cart.forEach(i=>{
         msg += `${i.name} x${i.qty} - ₱${i.price*i.qty}\n`;
     });
 
-    let total = cart.reduce((a,b)=>a+(b.price*b.qty),0);
-    msg += `\nTotal: ₱${total}`;
+    msg += `\nName: ${name}\nAddress: ${address}`;
 
-    window.location.href=`sms:09613886728?body=${encodeURIComponent(msg)}`;
-}
-
-updateCartUI();
-
-function orderNow(){
-    const menu = document.getElementById("menu-section");
-
-    // smooth scroll
-    menu.scrollIntoView({ behavior: "smooth" });
-
-    // highlight effect
-    menu.style.boxShadow = "0 0 30px rgba(214,51,132,0.6)";
-    
-    setTimeout(()=>{
-        menu.style.boxShadow = "none";
-    },1500);
-}
-
-function showToast(message){
-    const toast = document.getElementById("toast");
-
-    toast.innerText = message;
-    toast.classList.add("show");
-
-    setTimeout(()=>{
-        toast.classList.remove("show");
-    },1500);
+    window.open(`https://m.me/YOUR_USERNAME?text=${encodeURIComponent(msg)}`);
 }
