@@ -1,155 +1,106 @@
-// Product data
-const products = [
-    {
-        id: 1,
-        name: "iPhone 15 Pro",
-        price: 999,
-        image: "https://images.unsplash.com/photo-1695906325575-25c48b4f6964?w=400&h=250&fit=crop",
-        category: "Smartphone"
-    },
-    {
-        id: 2,
-        name: "MacBook Pro M3",
-        price: 1999,
-        image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=250&fit=crop",
-        category: "Laptop"
-    },
-    {
-        id: 3,
-        name: "AirPods Pro 2",
-        price: 249,
-        image: "https://images.unsplash.com/photo-1588423771079-1289195f4c3f?w=400&h=250&fit=crop",
-        category: "Headphones"
-    },
-    {
-        id: 4,
-        name: "iPad Pro M4",
-        price: 1099,
-        image: "https://images.unsplash.com/photo-1583363976105-5fdfb1e8f6fc?w=400&h=250&fit=crop",
-        category: "Tablet"
-    },
-    {
-        id: 5,
-        name: "Apple Watch Ultra",
-        price: 799,
-        image: "https://images.unsplash.com/photo-1579586140626-0a95f4b6b3b7?w=400&h=250&fit=crop",
-        category: "Smartwatch"
-    },
-    {
-        id: 6,
-        name: "Sony WH-1000XM5",
-        price: 399,
-        image: "https://images.unsplash.com/photo-1613427166355-3f28469b1b26?w=400&h=250&fit=crop",
-        category: "Headphones"
-    }
-];
-
-// Cart management
+// CART DATA
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-// DOM elements
-const productsGrid = document.getElementById('productsGrid');
+// ELEMENTS
 const cartCount = document.getElementById('cartCount');
+const cartList = document.getElementById('cartList');
+const totalAmount = document.getElementById('totalAmount');
 const cartModal = document.getElementById('cartModal');
-const cartItems = document.getElementById('cartItems');
-const cartTotal = document.getElementById('cartTotal');
-const cartLink = document.querySelector('.cart-link');
-const closeModal = document.querySelector('.close');
-const clearCartBtn = document.getElementById('clearCart');
 
-// Initialize app
-document.addEventListener('DOMContentLoaded', function() {
-    renderProducts();
-    updateCartUI();
-    
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
-});
+// ADD TO CART (from buttons)
+function addToCart(id, name, price) {
+    const existing = cart.find(item => item.id === id);
 
-// Render products
-function renderProducts() {
-    productsGrid.innerHTML = products.map(product => `
-        <div class="product-card" data-id="${product.id}">
-            <div class="product-image">
-                <img src="${product.image}" alt="${product.name}" loading="lazy">
-            </div>
-            <div class="product-info">
-                <h3 class="product-title">${product.name}</h3>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
-                <div class="product-actions">
-                    ${isInCart(product.id) ? 
-                        `<button class="btn btn-remove" onclick="removeFromCart(${product.id})">
-                            <i class="fas fa-trash"></i> Remove
-                        </button>
-                        <button class="btn btn-quantity" onclick="adjustQuantity(${product.id}, -1)">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <span class="quantity">${getCartItemQuantity(product.id)}</span>
-                        <button class="btn btn-quantity" onclick="adjustQuantity(${product.id}, 1)">
-                            <i class="fas fa-plus"></i>
-                        </button>` :
-                        `<button class="btn btn-add" onclick="addToCart(${product.id})">
-                            <i class="fas fa-cart-plus"></i> Add to Cart
-                        </button>`
-                    }
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Cart functions
-function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    const existingItem = cart.find(item => item.id === productId);
-    
-    if (existingItem) {
-        existingItem.quantity += 1;
+    if (existing) {
+        existing.quantity++;
     } else {
-        cart.push({ ...product, quantity: 1 });
+        cart.push({ id, name, price, quantity: 1 });
     }
-    
-    saveCart();
-    updateCartUI();
-    showNotification('Added to cart!', 'success');
+
+    updateCart();
 }
 
-function removeFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId);
-    saveCart();
-    updateCartUI();
-    renderProducts();
-    showNotification('Removed from cart!', 'error');
+// UPDATE CART UI
+function updateCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Update count
+    let count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.textContent = count;
+
+    // Update list
+    if (cart.length === 0) {
+        cartList.innerHTML = "<p>No items in cart</p>";
+        totalAmount.textContent = "₱0";
+        return;
+    }
+
+    cartList.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <div>
+                <strong>${item.name}</strong><br>
+                ₱${item.price} x ${item.quantity}
+            </div>
+            <button class="remove-btn" onclick="removeItem(${item.id})">Remove</button>
+        </div>
+    `).join("");
+
+    // Total
+    let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    totalAmount.textContent = "₱" + total;
 }
 
-function adjustQuantity(productId, change) {
-    const item = cart.find(item => item.id === productId);
-    if (item) {
-        item.quantity += change;
-        if (item.quantity <= 0) {
-            removeFromCart(productId);
-        } else {
-            saveCart();
-            updateCartUI();
-        }
+// REMOVE ITEM
+function removeItem(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+}
+
+// CLEAR CART
+function clearCart() {
+    cart = [];
+    updateCart();
+}
+
+// OPEN CART
+function openCart() {
+    cartModal.style.display = "block";
+}
+
+// CLOSE CART
+function closeCart() {
+    cartModal.style.display = "none";
+}
+
+// CHECKOUT
+function checkout() {
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+
+    let message = "Hi Jhea! I want to order:\n\n";
+
+    cart.forEach(item => {
+        message += `${item.name} x ${item.quantity} - ₱${item.price * item.quantity}\n`;
+    });
+
+    let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    message += `\nTotal: ₱${total}`;
+
+    // OPEN SMS
+    window.location.href = `sms:09613886728?body=${encodeURIComponent(message)}`;
+
+    cart = [];
+    updateCart();
+}
+
+// CLOSE MODAL WHEN CLICK OUTSIDE
+window.onclick = function(event) {
+    if (event.target == cartModal) {
+        cartModal.style.display = "none";
     }
 }
 
-function isInCart(productId) {
-    return cart.some(item => item.id === productId);
-}
-
-function getCartItemQuantity(productId) {
-    const item = cart.find(item => item.id === productId);
-    return item ? item.quantity : 0;
-}
-
-function saveCart() {
-    localStorage.setItem('cart', JSON.stringify
+// INITIAL LOAD
+updateCart();
