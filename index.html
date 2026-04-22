@@ -3,96 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maison de Gateau</title>
-
+<title>Sweets by Jhea Cake Shop</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- NAV -->
-<header class="header">
-    <h2>🎂 Maison de Gateau</h2>
+<header>
+    <div id="menuToggle">☰</div>
+    <div class="logo">🎂 Maison-de-G-teau </div>
+    <div id="cartToggle">🛒</div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-    <h1>Luxury Cakes & Brownies</h1>
-    <p>Elegance in every bite</p>
-    <button onclick="scrollToMenu()">Order Now</button>
-</section>
-
-<!-- PRODUCTS -->
-<section id="menu">
-    <h2>Our Collection</h2>
-
-    <div class="products">
-
-        <div class="product" onclick="openProduct('Chocolate Cake',350,'cake')">
-            <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400">
-            <h3>Chocolate Cake</h3>
-            <p>Starts ₱350</p>
-        </div>
-
-        <div class="product" onclick="openProduct('Brownies',95,'brownie')">
-            <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400">
-            <h3>Brownies</h3>
-            <p>Starts ₱95</p>
-        </div>
-
-    </div>
-</section>
-
-<!-- PRODUCT POPUP -->
-<div id="productModal" class="modal">
-    <div class="modal-content">
-
-        <span class="close" onclick="closeProduct()">×</span>
-
-        <h3 id="productName"></h3>
-
-        <div id="productOptions"></div>
-
-        <div class="qty">
-            <button onclick="changeQty(-1)">-</button>
-            <span id="qty">1</span>
-            <button onclick="changeQty(1)">+</button>
-        </div>
-
-        <button class="add-btn" onclick="addToCart()">Add to Cart</button>
-
-    </div>
+<!-- SIDEBAR MENU -->
+<div class="sidebar" id="sidebar">
+    <a href="#menu">Menu</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#visit">Visit</a>
 </div>
 
 <!-- CART -->
-<div class="cart-btn" onclick="openCart()">🛒 <span id="cartCount">0</span></div>
-
-<div id="cartModal" class="modal">
-    <div class="modal-content">
-
-        <h2>Your Cart</h2>
-
-        <div id="cartItems"></div>
-
-        <h3>Total: ₱<span id="total">0</span></h3>
-
-        <button onclick="openCheckout()">Checkout</button>
-        <button onclick="closeCart()">Close</button>
-    </div>
+<div class="cart" id="cartBox">
+    <h3>Your Cart 🛒</h3>
+    <div id="cartItems">No items yet</div>
+    <h4>Total: ₱<span id="total">0</span></h4>
+    <button onclick="checkout()">Checkout via Messenger</button>
 </div>
 
-<!-- ORDER FORM -->
-<div id="checkoutModal" class="modal">
+<section>
+    <h2>Welcome!</h2>
+    <p>Premium cakes made with love 💕</p>
+</section>
+
+<section id="menu">
+<h2>Menu</h2>
+
+<div class="menu-container">
+
+    <div class="card" onclick="openModal('Chocolate Cake', 350)">
+        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587">
+        <h3>Chocolate Cake</h3>
+        <p>Starts at ₱350</p>
+    </div>
+
+    <div class="card" onclick="openModal('Brownies', 95)">
+        <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c">
+        <h3>Brownies</h3>
+        <p>Starts at ₱95</p>
+    </div>
+
+</div>
+</section>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
     <div class="modal-content">
-
-        <h2>Order Details</h2>
-
-        <input id="name" placeholder="Your Name">
-        <input id="address" placeholder="Your Address">
-        <textarea id="note" placeholder="Notes (optional)"></textarea>
-
-        <button onclick="sendMessenger()">Send Order via Messenger</button>
-
+        <h3 id="modalTitle"></h3>
+        <p>Price: ₱<span id="modalPrice"></span></p>
+        <button onclick="addToCart()">Add to Cart</button>
+        <button onclick="closeModal()">Close</button>
     </div>
 </div>
 
