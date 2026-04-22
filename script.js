@@ -104,5 +104,5 @@ function sendMessenger(){
 
     msg += `\nName: ${name}\nAddress: ${address}`;
 
-    window.open(`https://www.facebook.com/j3yyance/?text=${encodeURIComponent(msg)}`);
+    window.open(`https://m.me/YOUR_USERNAME?text=${encodeURIComponent(msg)}`);
 }
