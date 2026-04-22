@@ -1,4 +1,4 @@
-let cart = [];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function toggleMenu(){
     document.getElementById("menu").classList.toggle("active");
@@ -8,21 +8,26 @@ function scrollToMenu(){
     document.getElementById("menu-section").scrollIntoView({behavior:"smooth"});
 }
 
-function addToCart(name, price){
-    cart.push({name, price});
+function addToCart(id,name,price){
+    let item = cart.find(i=>i.id===id);
 
-    document.getElementById("cartCount").innerText = cart.length;
+    if(item){
+        item.qty++;
+    } else {
+        cart.push({id,name,price,qty:1});
+    }
 
-    showToast();
+    saveCart();
 }
 
-function showToast(){
-    const toast = document.getElementById("toast");
-    toast.style.display="block";
+function saveCart(){
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartUI();
+}
 
-    setTimeout(()=>{
-        toast.style.display="none";
-    },1500);
+function updateCartUI(){
+    document.getElementById("cartCount").innerText =
+        cart.reduce((a,b)=>a+b.qty,0);
 }
 
 function openCart(){
@@ -35,23 +40,68 @@ function closeCart(){
 }
 
 function renderCart(){
-    let list = document.getElementById("cartItems");
+    let container = document.getElementById("cartItems");
     let total = 0;
 
-    list.innerHTML = cart.map(item=>{
-        total += item.price;
-        return `<p>${item.name} - ₱${item.price}</p>`;
+    if(cart.length===0){
+        container.innerHTML="Cart is empty";
+        document.getElementById("total").innerText=0;
+        return;
+    }
+
+    container.innerHTML = cart.map(item=>{
+        total += item.price * item.qty;
+
+        return `
+        <div class="cart-item">
+            <div>
+                ${item.name}<br>
+                ₱${item.price} x ${item.qty}
+            </div>
+
+            <div>
+                <button class="qty-btn" onclick="changeQty(${item.id},-1)">-</button>
+                <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+                <button onclick="removeItem(${item.id})">x</button>
+            </div>
+        </div>
+        `;
     }).join("");
 
     document.getElementById("total").innerText = total;
 }
 
+function changeQty(id,change){
+    let item = cart.find(i=>i.id===id);
+    item.qty += change;
+
+    if(item.qty <= 0){
+        cart = cart.filter(i=>i.id!==id);
+    }
+
+    saveCart();
+    renderCart();
+}
+
+function removeItem(id){
+    cart = cart.filter(i=>i.id!==id);
+    saveCart();
+    renderCart();
+}
+
 function checkout(){
-    let msg = "Hi Jhea! Order:\n";
+    if(cart.length===0) return alert("Empty cart!");
+
+    let msg="Hi Jhea! Order:\n\n";
 
     cart.forEach(i=>{
-        msg += `${i.name} - ₱${i.price}\n`;
+        msg += `${i.name} x${i.qty} - ₱${i.price*i.qty}\n`;
     });
 
-    window.location.href = `sms:09613886728?body=${encodeURIComponent(msg)}`;
+    let total = cart.reduce((a,b)=>a+(b.price*b.qty),0);
+    msg += `\nTotal: ₱${total}`;
+
+    window.location.href=`sms:09613886728?body=${encodeURIComponent(msg)}`;
 }
+
+updateCartUI();
