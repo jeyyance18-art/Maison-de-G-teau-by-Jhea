@@ -3,73 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> Maison de G teau </title>
+<title>Maison de Gateau</title>
 
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
 
 <!-- NAV -->
 <header class="header">
-    <div class="nav">
-        <h2>🎂 > Maison de G teau </h2>
-
-        <div class="hamburger" onclick="toggleMenu()">
-            ☰
-        </div>
-
-        <ul id="menu">
-            <li><a href="#menu-section">Menu</a></li>
-            <li><a href="#products">Products</a></li>
-        </ul>
-    </div>
+    <h2>🎂 Maison de Gateau</h2>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-    <h1>Cakes & Brownies 🍰</h1>
-    <p>Freshly baked everyday</p>
-    <button onclick="orderNow()">Order Now</button>
+    <h1>Luxury Cakes & Brownies</h1>
+    <p>Elegance in every bite</p>
+    <button onclick="scrollToMenu()">Order Now</button>
 </section>
 
 <!-- PRODUCTS -->
-<section id="menu-section">
-    <h2>Menu</h2>
+<section id="menu">
+    <h2>Our Collection</h2>
 
     <div class="products">
 
-        <div class="product">
+        <div class="product" onclick="openProduct('Chocolate Cake',350,'cake')">
             <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400">
             <h3>Chocolate Cake</h3>
-
-            <button onclick="addToCart(1,'Cake Small',350)">Small ₱350</button>
-            <button onclick="addToCart(2,'Cake Medium',750)">Medium ₱750</button>
-            <button onclick="addToCart(3,'Cake Large',1200)">Large ₱1200</button>
+            <p>Starts ₱350</p>
         </div>
 
-        <div class="product">
+        <div class="product" onclick="openProduct('Brownies',95,'brownie')">
             <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400">
             <h3>Brownies</h3>
-
-            <button onclick="addToCart(4,'Brownie 1pc',95)">₱95</button>
-            <button onclick="addToCart(5,'Box of 6',520)">Box ₱520</button>
+            <p>Starts ₱95</p>
         </div>
 
     </div>
 </section>
 
-<!-- FLOATING CART -->
-<div class="cart-icon" onclick="openCart()">
-    🛒 <span id="cartCount">0</span>
+<!-- PRODUCT POPUP -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+
+        <span class="close" onclick="closeProduct()">×</span>
+
+        <h3 id="productName"></h3>
+
+        <div id="productOptions"></div>
+
+        <div class="qty">
+            <button onclick="changeQty(-1)">-</button>
+            <span id="qty">1</span>
+            <button onclick="changeQty(1)">+</button>
+        </div>
+
+        <button class="add-btn" onclick="addToCart()">Add to Cart</button>
+
+    </div>
 </div>
 
 <!-- CART -->
+<div class="cart-btn" onclick="openCart()">🛒 <span id="cartCount">0</span></div>
+
 <div id="cartModal" class="modal">
     <div class="modal-content">
-
-        <span class="close" onclick="closeCart()">×</span>
 
         <h2>Your Cart</h2>
 
@@ -77,12 +76,26 @@
 
         <h3>Total: ₱<span id="total">0</span></h3>
 
-        <button class="checkout" onclick="checkout()">Checkout</button>
+        <button onclick="openCheckout()">Checkout</button>
+        <button onclick="closeCart()">Close</button>
+    </div>
+</div>
+
+<!-- ORDER FORM -->
+<div id="checkoutModal" class="modal">
+    <div class="modal-content">
+
+        <h2>Order Details</h2>
+
+        <input id="name" placeholder="Your Name">
+        <input id="address" placeholder="Your Address">
+        <textarea id="note" placeholder="Notes (optional)"></textarea>
+
+        <button onclick="sendMessenger()">Send Order via Messenger</button>
+
     </div>
 </div>
 
 <script src="script.js"></script>
 </body>
 </html>
-
-<div id="toast"></div>
