@@ -11,109 +11,84 @@
 
 <body>
 
+<!-- NAVBAR -->
 <header class="header">
-    <nav class="navbar">
-        <div class="logo">🎂 Sweets by Jhea</div>
+    <div class="nav">
+        <div class="logo">🎂 Jhea</div>
 
-        <!-- MENU BUTTON (MOBILE) -->
-        <div class="menu-toggle" onclick="toggleMenu()">
+        <div class="hamburger" onclick="toggleMenu()">
             <i class="fas fa-bars"></i>
         </div>
 
-        <ul class="nav-menu" id="navMenu">
-            <li><a href="#menu">Menu</a></li>
+        <ul id="menu">
+            <li><a href="#menu-section">Menu</a></li>
             <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#visit">Visit</a></li>
-            <li class="cart-btn" onclick="openCart()">🛒 <span id="cartCount">0</span></li>
         </ul>
-    </nav>
+    </div>
 </header>
 
 <!-- HERO -->
 <section class="hero">
-    <div class="hero-content">
-        <h1>🍰 Fresh Cakes & Brownies</h1>
-        <p>Made with ❤️ by Jhea Cabradilla</p>
-        <button class="cta-btn" onclick="scrollToMenu()">Order Now</button>
-    </div>
+    <h1>Fresh Cakes & Brownies 🍰</h1>
+    <p>Delicious. Affordable. Made with love 💗</p>
+    <button onclick="scrollToMenu()">Order Now</button>
 </section>
 
 <!-- MENU -->
-<section id="menu" class="menu">
-    <h2>🍫 Our Menu</h2>
+<section id="menu-section">
+    <h2>Our Products</h2>
 
-    <div class="menu-grid">
+    <div class="products">
 
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400" alt="">
+        <!-- CAKE -->
+        <div class="product">
+            <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400">
+
             <h3>Chocolate Cake</h3>
 
-            <div class="prices">
-                <div>Small ₱350</div>
-                <div>Medium ₱750</div>
-                <div>Large ₱1200</div>
-            </div>
-
-            <div class="cart-controls">
-                <button onclick="addToCart(1,'Cake Small',350)">Add</button>
-                <button onclick="addToCart(2,'Cake Medium',750)">Add</button>
+            <div class="sizes">
+                <button onclick="addToCart('Cake Small',350)">Small ₱350</button>
+                <button onclick="addToCart('Cake Medium',750)">Medium ₱750</button>
+                <button onclick="addToCart('Cake Large',1200)">Large ₱1200</button>
             </div>
         </div>
 
-        <div class="card">
-            <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400" alt="">
+        <!-- BROWNIES -->
+        <div class="product">
+            <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400">
+
             <h3>Brownies</h3>
 
-            <div class="prices">
-                <div>1pc ₱95</div>
-                <div>Box 6 ₱520</div>
-            </div>
-
-            <div class="cart-controls">
-                <button onclick="addToCart(3,'Brownie 1pc',95)">Add</button>
-                <button onclick="addToCart(4,'Brownie Box',520)">Add</button>
+            <div class="sizes">
+                <button onclick="addToCart('Brownie 1pc',95)">1pc ₱95</button>
+                <button onclick="addToCart('Box of 6',520)">Box ₱520</button>
             </div>
         </div>
 
     </div>
 </section>
 
-<!-- GALLERY -->
-<section id="gallery" class="gallery">
-    <h2>📸 Gallery</h2>
+<!-- FLOATING CART -->
+<div class="floating-cart" onclick="openCart()">
+    🛒 <span id="cartCount">0</span>
+</div>
 
-    <div class="gallery-grid">
-        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400">
-        <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400">
-        <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400">
-    </div>
-</section>
-
-<!-- VISIT -->
-<section id="visit" class="visit">
-    <h2>📍 Contact</h2>
-
-    <div class="contact-card">
-        <p>📞 09613886728</p>
-
-        <a href="tel:09613886728" class="btn-contact">Call</a>
-        <a href="sms:09613886728?body=Hi Jhea!" class="btn-contact">SMS Order</a>
-    </div>
-</section>
-
-<!-- CART -->
+<!-- CART MODAL -->
 <div id="cartModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeCart()">&times;</span>
+        <h3>Your Order</h3>
 
-        <h3>Your Cart</h3>
-        <div id="cartList"></div>
+        <div id="cartItems"></div>
 
-        <h3>Total: <span id="totalAmount">₱0</span></h3>
+        <h2>Total: ₱<span id="total">0</span></h2>
 
-        <button onclick="checkout()">Checkout</button>
+        <button onclick="checkout()">Order via SMS</button>
+        <button onclick="closeCart()">Close</button>
     </div>
 </div>
+
+<!-- TOAST -->
+<div id="toast">Added to cart ✅</div>
 
 <script src="script.js"></script>
 </body>
