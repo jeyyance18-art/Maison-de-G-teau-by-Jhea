@@ -105,3 +105,17 @@ function checkout(){
 }
 
 updateCartUI();
+
+function orderNow(){
+    const menu = document.getElementById("menu-section");
+
+    // smooth scroll
+    menu.scrollIntoView({ behavior: "smooth" });
+
+    // highlight effect
+    menu.style.boxShadow = "0 0 30px rgba(214,51,132,0.6)";
+    
+    setTimeout(()=>{
+        menu.style.boxShadow = "none";
+    },1500);
+}
