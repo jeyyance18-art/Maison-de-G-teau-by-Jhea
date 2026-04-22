@@ -139,3 +139,21 @@ body {
         width:90%;
     }
 }
+
+#toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    opacity: 0;
+    transition: 0.3s;
+    z-index: 3000;
+}
+
+#toast.show {
+    opacity: 1;
+}
